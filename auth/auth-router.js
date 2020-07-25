@@ -15,7 +15,7 @@ router.post("/register", (req, res) => {
         res.status(201).json({ data: newUser })
     })
     .catch( err => {
-        handleError(err, res)
+        res.status(500).json({ error: "Username Taken", err})
     })
   } else {
     res.status(400).json({ message: "All fields are necessary"})
@@ -33,7 +33,7 @@ router.post("/login", (req, res) => {
               req.session.username = user.username;
               req.session.loggedIn = true;
     
-            res.status(200).json({ welcome: "Welcome", session: req.session, user: user });
+            res.status(200).json({ welcome: "Welcome", session: req.session, user: user.username });
           } else {
             res.status(401).json({ message: "Invalid Credentials" });
           }
@@ -53,11 +53,11 @@ router.get("/logout", (req, res) => {
           if (err) {
               res.status(500).json({ message: "error logging out, please try later" });
           } else {
-              res.status(204).end();
+              res.status(204).json({ message: 'successfully logged out' });
           }
       });
   } else {
-      res.status(200).json({ message: "already logged out" });
+      res.status(500).json({ message: "already logged out" });
   }
 });
 
